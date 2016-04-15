@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+---
+management:
+  context-path: /manage
+
+---
+info:
+  component: ${spring.application.name}
+  version: 1.0.0
+  tag: 1.3.beta1
+  appInstanceId: ${random.value}
+  port: 8080
+  ipAdr: 0.0.0.0
+
+--- #
+
+--- #eureka discovery configuration
+eureka:
+  leaseRenewalIntervalInSeconds: 1
+  leaseExpirationDurationInSeconds: 1
+  initialInstanceInfoReplicationIntervalSeconds: 1
+  instance:
+    statusPageUrlPath: ${management.context-path}/info
+    healthCheckUrlPath: ${management.context-path}/health
+    instanceId: ${spring.application.name}:${random.value}
+  client:
+
+    # Default values comes from org.springframework.cloud.netflix.eurek.EurekaClientConfigBean
+    registryFetchIntervalSeconds: 60
+    instanceInfoReplicationIntervalSeconds: 60
+    initialInstanceInfoReplicationIntervalSeconds: 1
+
+
+zuul:
+  ignoredServices: "*"
+  routes:
+    home:
+      path: /home/**
+      stripPrefix: true
+      serviceId: ui-service
+    user:
+      path: /api/user/**
+      stripPrefix: false
+      serviceId: ui-service
