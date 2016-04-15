@@ -31,16 +31,48 @@ eureka:
     registryFetchIntervalSeconds: 60
     instanceInfoReplicationIntervalSeconds: 60
     initialInstanceInfoReplicationIntervalSeconds: 1
-
+---
 
 zuul:
   ignoredServices: "*"
   routes:
-    home:
-      path: /home/**
+    ui:
+      path: /ui/**
       stripPrefix: true
+      retryable: false
+      serviceId: ui-service
+    bower:
+      path: /bower_components/**
+      stripPrefix: false
+      retryable: false
+      serviceId: ui-service
+    app:
+      path: /app/**
+      stripPrefix: false
+      retryable: false
+      serviceId: ui-service
+    tmp:
+      path: /tmp/**
+      stripPrefix: false
+      retryable: false
       serviceId: ui-service
     user:
       path: /api/user/**
       stripPrefix: false
       serviceId: ui-service
+---
+spring:
+  profile: production
+zuul:
+  ignoredServices: "*"
+  routes:
+    ui:
+      path: /ui/**
+      stripPrefix: true
+      retryable: false
+      serviceId: ui-service
+    user:
+      path: /api/user/**
+      stripPrefix: false
+      serviceId: ui-service
+---
